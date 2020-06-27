@@ -1,0 +1,64 @@
+﻿@model BugTrakr.Models.MergeModel
+@{
+    ViewData["Title"] = "Edit Role";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="row">
+    <div class="col-md-4">
+
+        <form asp-action="EditRole">
+            <hr />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <!-- Role Id # -->
+            <div class="form-group">
+                <label asp-for="@Model.RoleId"></label>
+                <input asp-for="@Model.RoleId" readonly class="form-control" />
+            </div>
+
+            <!--Role Name-->
+            <div class="form-group">
+                <label asp-for="@Model.RoleName"></label>
+                <input asp-for="@Model.RoleName" class="form-control" />
+                <span asp-validation-for="@Model.RoleName" class="text-danger"></span>
+            </div>
+
+            <!--Submit button-->
+            <div class="form-group">
+                <button type="submit" value="EditRole" class="btn btn-primary">Update</button>
+                <a asp-controller="Admin" asp-action="Index" class="btn btn-dark">Cancel</a>
+            </div>
+        </form>
+
+        <div class="card">
+            <div class="card-header">
+                <h3>Users in this role</h3>
+            </div>
+            <div class="card-body">
+                @if (Model.UserNames.Any())
+                {
+                    for (int i = 0; i < Model.UserNames.Count; i++)
+                    {
+                        <h5 class="card-title">@Model.UserNames[i] - @Model.UserFullNames[i]</h5>
+                    }
+                }
+                else
+                {
+                    <h5 class="card-title">No Users assigned to this role</h5>
+                }
+            </div>
+            <div class="card-footer">
+                <a asp-controller="Admin" asp-action="EditUserRoles"
+                   asp-route-roleId="@Model.RoleId" class="btn btn-primary">Add or Remove Users</a>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

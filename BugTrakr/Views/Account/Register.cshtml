@@ -1,0 +1,58 @@
+﻿@model BugTrakr.Models.MergeModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Register">
+            <h4>Create a new account.</h4>
+            <hr />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <!--First Name-->
+            <div class="form-group">
+                <label asp-for="@Model.AppUsers.FirstName"></label>
+                <input asp-for="@Model.AppUsers.FirstName" class="form-control" />
+                <span asp-validation-for="@Model.AppUsers.FirstName" class="text-danger"></span>
+            </div>
+
+            <!--Last Name-->
+            <div class="form-group">
+                <label asp-for="@Model.AppUsers.LastName"></label>
+                <input asp-for="@Model.AppUsers.LastName" class="form-control" />
+                <span asp-validation-for="@Model.AppUsers.LastName" class="text-danger"></span>
+            </div>
+
+            <!--User Name-->
+            <div class="form-group">
+                <label asp-for="@Model.AppUserName"></label>
+                <input asp-for="@Model.AppUserName" class="form-control" />
+                <span asp-validation-for="@Model.AppUserName" class="text-danger"></span>
+            </div>
+
+            <!--Email-->
+            <div class="form-group">
+                <label asp-for="@Model.AppUserEmail"></label>
+                <input asp-for="@Model.AppUserEmail" class="form-control" />
+                <span asp-validation-for="@Model.AppUserEmail" class="text-danger"></span>
+            </div>
+
+            <!--Password-->
+            <div class="form-group">
+                <label asp-for="@Model.AppUserPassword"></label>
+                <input type="password" asp-for="@Model.AppUserPassword" class="form-control" />
+                <span asp-validation-for="@Model.AppUserPassword" class="text-danger"></span>
+            </div>
+
+            <!--Submit button-->
+            <button type="submit" value="Register" class="btn btn-primary">Register</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

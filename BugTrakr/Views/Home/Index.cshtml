@@ -1,0 +1,27 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+@if (User.Identity.IsAuthenticated)
+{
+    <div class="text-center">
+        <h1 class="display-3">
+            <strong>
+                Welcome back @ViewData["FullName"]
+            </strong>
+        </h1>
+    </div>
+
+}
+else
+{
+    <div class="text-center">
+        <h1 class="display-1">
+            <strong>
+                Welcome to <span><i style="color:limegreen" class="fas fa-bug"></i></span>BugTrakr
+                </strong>
+        </h1>
+    </div>
+}
+

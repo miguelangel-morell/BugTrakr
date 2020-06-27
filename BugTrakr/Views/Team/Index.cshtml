@@ -1,0 +1,15 @@
+﻿@model MergeModel
+@{
+    ViewData["Title"] = "Team Progress";
+ }
+
+<h1>@ViewData["Title"]</h1>
+
+<input type="hidden" id="approval" value=@Model.ApprovalStatusCount>
+<input type="hidden" id="progress" value=@Model.InProgressStatusCount>
+<input type="hidden" id="done" value=@Model.DoneStatusCount>
+<input type="hidden" id="completed" value=@Model.CompletedStatusCount>
+<canvas id="myChart" width="300" height="300"></canvas>
+
+<script type="text/javascript" src="~/js/ProgressChart.js">
+</script>

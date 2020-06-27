@@ -1,0 +1,105 @@
+﻿
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<AppUser> UserMgr
+@model BugTrakr.Models.MergeModel
+
+@{
+    ViewData["Title"] = "Create Bug";
+    string dev = "(Developer)";
+    string qa = "(QA)";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <!--Title-->
+            <div class="form-group">
+                <label asp-for="@Model.Bugs.BugTitle" class="control-label"></label>
+                <input asp-for="@Model.Bugs.BugTitle" class="form-control" />
+                <span asp-validation-for="@Model.Bugs.BugTitle" class="text-danger"></span>
+            </div>
+
+            <!--Bug Status-->
+            <div class="form-group">
+                <label asp-for="@Model.Bugs.BugStatus" class="control-label"></label>
+                <select asp-for="@Model.Bugs.BugStatus" class="form-control">
+                    <option value="@BugStatusEnum.AwaitingApproval">Awaiting Approval</option>
+                    <option value="@BugStatusEnum.InProgress">In Progress</option>
+                    <option value="@BugStatusEnum.Done">Done</option>
+                </select>
+                <span asp-validation-for="@Model.Bugs.BugStatus" class="text-danger"></span>
+            </div>
+
+            <!--Assigned To-->
+            <div class="form-group">
+                <label asp-for="@Model.Bugs.AssignedToId" class="control-label"></label>
+                <select asp-for="@Model.Bugs.AssignedToId" class="form-control">
+
+                    <!--Display the qualified users that
+            the current logged in user can select from.-->
+
+                    @{
+                        foreach (var user in Model.Users)
+                        {
+
+                            @if (User.IsInRole("QA") && await UserMgr.IsInRoleAsync(user, "Tech Lead"))
+                            {
+                                <option value="@user.Id">@user.FirstName @user.LastName</option>
+                            }
+                            else if (User.IsInRole("Tech Lead"))
+                            {
+                                @if (await UserMgr.IsInRoleAsync(user, "Developer"))
+                                {
+                                    <option value="@user.Id">@user.FirstName @user.LastName @dev</option>
+                                }
+                                else if (await UserMgr.IsInRoleAsync(user, "QA"))
+                                {
+                                    <option value="@user.Id">@user.FirstName @user.LastName @qa</option>
+                                }
+                            }
+
+                        }
+                    }
+                </select>
+                <span asp-validation-for="@Model.Bugs.AssignedToId" class="text-danger"></span>
+            </div>
+
+            <!--Bug Description-->
+            <div class="form-group">
+                <label asp-for="@Model.Bugs.BugDescription" class="control-label"></label>
+                @Html.TextAreaFor(m => m.Bugs.BugDescription, 4, 15,
+                        new { @style = "max-height: 8em; min-height: 8em;", @class = "form-control" })
+                <span asp-validation-for="@Model.Bugs.BugDescription" class="text-danger"></span>
+            </div>
+
+            <!--Bug Difficulty-->
+            <div class="form-group">
+                <label asp-for="@Model.Bugs.BugDifficulty" class="control-label"></label>
+                <select asp-for="@Model.Bugs.BugDifficulty" class="form-control">
+                    <option>@BugDifficultyEnum.Easy</option>
+                    <option>@BugDifficultyEnum.Meduim</option>
+                    <option>@BugDifficultyEnum.Hard</option>
+                </select>
+                <span asp-validation-for="@Model.Bugs.BugDifficulty" class="text-danger"></span>
+            </div>
+
+            <!--Submit button-->
+            <div class="form-group">
+                <input type="submit" asp-controller="Bug" asp-action="Create" value="Create Bug" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to Bugs</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

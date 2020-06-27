@@ -1,0 +1,19 @@
+﻿@model List<AppRole>
+
+@{
+    ViewData["Title"] = "Roles";
+  }
+
+    <h1>@ViewData["Title"]</h1>
+
+    @foreach (var item in Model)
+    {
+        <div class="card col-md-4">
+            <div class="card-header">
+                <h3>@item.Name : @item.Id</h3>
+            </div>
+            <div class="card-body">
+                <a asp-controller="Admin" asp-action="EditRole" asp-route-id="@item.Id">Edit</a>
+            </div>
+        </div>
+    }

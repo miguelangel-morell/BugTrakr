@@ -1,0 +1,120 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<AppUser> UserMgr
+@model IEnumerable<BugTrakr.Models.Bug>
+
+@{
+    ViewData["Title"] = "Bugs";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+@if(User.IsInRole("QA"))
+{
+    <p>
+        @Html.ActionLink("Create New Bug", "Create", "Bug", null, new { @class = "btn btn-warning" })
+    </p>
+}
+
+<table class="table table-dark table-striped">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.BugTitle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BugStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AssignedToId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AssignedById)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BugDifficulty)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+
+            <!--Title-->
+            <td>
+                <a style="color: white;" asp-action="Details" asp-route-id="@item.BugId">@item.BugTitle</a>
+            </td>
+
+            <!--Bug Status-->
+            <td>
+                @if (item.BugStatus == BugStatusEnum.AwaitingApproval)
+                {
+                    <span style="color: lightgrey"><i class="fas fa-dot-circle"></i></span>
+                }
+                else if (item.BugStatus == BugStatusEnum.InProgress)
+                {
+                    <span style="color: gold"><i class="fas fa-dot-circle"></i></span>
+                }
+                else if (item.BugStatus == BugStatusEnum.Done)
+                {
+                    <span style="color: deepskyblue"><i class="fas fa-dot-circle"></i></span>
+                }
+                else
+                {
+                    <span style="color: limegreen"><i class="fas fa-circle"></i></span>
+                }
+                @Html.DisplayFor(modelItem => item.BugStatus)
+            </td>
+
+            <!--Assigned To-->
+            @{
+                var userAssignedTo = await UserMgr.FindByIdAsync(item.AssignedToId.ToString());
+                <td>@userAssignedTo.FirstName @userAssignedTo.LastName</td>
+            }
+
+            <!--Assigned By-->
+            @{
+                var userAssignedBy = await UserMgr.FindByIdAsync(item.AssignedById.ToString());
+                <td>@userAssignedBy.FirstName @userAssignedBy.LastName</td>
+            }
+
+            <!--Bug Difficulty-->
+            <td>
+                @if (item.BugDifficulty == BugDifficultyEnum.Easy)
+                {
+                    <span class="badge badge-pill badge-success">
+                        @Html.DisplayFor(modelItem => item.BugDifficulty)
+                    </span>
+                }
+                else if (item.BugDifficulty == BugDifficultyEnum.Meduim)
+                {
+                    <span class="badge badge-pill badge-warning">
+                        @Html.DisplayFor(modelItem => item.BugDifficulty)
+                    </span>
+                }
+                else
+                {
+                    <span class="badge badge-pill badge-danger">
+                        @Html.DisplayFor(modelItem => item.BugDifficulty)
+                    </span>
+                }
+            </td>
+
+            <!--Update/Delete Buttons-->
+            <td>
+                @if (!item.IsComplete)
+                {
+                    <a style="color: white;" class="btn btn-primary btn-sm"
+                       asp-action="Edit" asp-route-id="@item.BugId">Update Bug</a>
+
+                    @if (User.IsInRole("QA"))
+                    {
+                        <a style="color: white;" class="btn btn-danger btn-sm"
+                           asp-action="Delete" asp-route-id="@item.BugId">Delete</a>
+                    }
+                }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

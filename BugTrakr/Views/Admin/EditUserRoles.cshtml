@@ -1,0 +1,32 @@
+﻿@model List<UserRoleModel>
+@{
+    int roleId = ViewBag.roleId;
+}
+    <div class="row"><div class="col-md-6"></div></div>
+    <form asp-action="EditUserRoles">
+        <div class="card">
+            <div class="card-header">
+                <h2>Add or remove users from this role</h2>
+            </div>
+            <div class="card-body">
+                @for (int i = 0; i < Model.Count; i++)
+                {
+                    <div class="form-check m-1">
+                        <input type="hidden" asp-for="@Model[i].UserId" />
+                        <input type="hidden" asp-for="@Model[i].UserName" />
+                        <input type="hidden" asp-for="@Model[i].FirstName" />
+                        <input type="hidden" asp-for="@Model[i].LastName" />
+                        <input asp-for="@Model[i].IsSelectedUser" class="form-check-input" />
+                        <label asp-for="@Model[i].IsSelectedUser" class="form-check-label">
+                            @Model[i].UserName - @Model[i].FullName
+                        </label>
+                    </div>     
+                }
+            </div>
+            <div class="card-footer">
+
+                <button type="submit" value="EditUserRoles"  asp-route-roleId="@roleId.ToString()" class="btn btn-primary">Update</button>
+                <a asp-controller="Admin" asp-route-id="@roleId.ToString()" asp-action="EditRole" class="btn btn-dark">Cancel</a>
+            </div>
+        </div>
+    </form>
